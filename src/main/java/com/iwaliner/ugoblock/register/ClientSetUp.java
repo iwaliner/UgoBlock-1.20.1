@@ -9,6 +9,7 @@ import com.iwaliner.ugoblock.object.moving_block.MovingBlockRenderer;
 import com.iwaliner.ugoblock.object.seat.InvisibleEntityRenderer;
 import com.iwaliner.ugoblock.object.controller.RotationControllerScreen;
 import com.iwaliner.ugoblock.object.controller.SlideControllerScreen;
+import com.iwaliner.ugoblock.object.seat.SeatEntityRenderer;
 import com.iwaliner.ugoblock.object.wireless_redstone_receiver.WirelessRedstoneReceiverRenderer;
 import com.iwaliner.ugoblock.object.wireless_redstone_transmitter.PortableAlternateWirelessRedstoneTransmitterItem;
 import com.iwaliner.ugoblock.object.wireless_redstone_transmitter.WirelessRedstoneTransmitterRenderer;
@@ -36,10 +37,10 @@ public class ClientSetUp {
     public static void RegisterEntityRendererEvent(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(Register.MoveableBlock.get(), MovingBlockRenderer::new);
         event.registerEntityRenderer(Register.CollisionEntity.get(), InvisibleEntityRenderer::new);
-        event.registerEntityRenderer(Register.SeatEntity.get(), InvisibleEntityRenderer::new);
+        event.registerEntityRenderer(Register.SeatEntity.get(), SeatEntityRenderer::new);
         event.registerEntityRenderer(Register.GravitateBlock.get(), FallingBlockRenderer::new);
         event.registerEntityRenderer(Register.DoorEntity.get(), InvisibleEntityRenderer::new);
-        event.registerEntityRenderer(Register.StandingSeatEntity.get(), InvisibleEntityRenderer::new);
+        event.registerEntityRenderer(Register.StandingSeatEntity.get(), SeatEntityRenderer::new);
     }
     @Nullable
     @SubscribeEvent

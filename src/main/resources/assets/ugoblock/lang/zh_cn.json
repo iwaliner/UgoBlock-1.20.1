@@ -35,7 +35,7 @@
    "info.ugoblock.block_imitation_wand": "将各类机器的外观伪装成其他方块的魔杖。",
    "info.ugoblock.block_imitation_wand2": "右击以复制各类方块的外观后，再次右击各类机器以适用外观。",
    "info.ugoblock.block_imitation_wand3": "可用于平移控制器、旋转控制器、无线红石发送器、无线红石接收器共4种机器。",
-   "info.ugoblock.block_imitation_wand4": "空手右击伪装了外观的机器以解除伪装。",
+   "info.ugoblock.block_imitation_wand4": "潜行时空手右击伪装了外观的机器以解除伪装。",
    "info.ugoblock.block_imitatable": "可以用外观伪装之杖伪装成其他方块的样子。",
    "info.ugoblock.color_white": "白色",
    "info.ugoblock.color_orange": "橙色",
