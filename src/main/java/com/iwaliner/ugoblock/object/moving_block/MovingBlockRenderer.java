@@ -108,11 +108,25 @@ import java.util.List;
 
     private void renderInner(MovingBlockEntity movingBlock, PoseStack poseStack, MultiBufferSource multiBufferSource,Quaternionf rotatedQuaternionf,int i0) {
         List<BlockPos> posList = movingBlock.getPosList();
+        if(posList == null || posList.isEmpty()){
+            return;
+        }
         List<BlockState> stateList = movingBlock.getStateList();
+        if(stateList == null || stateList.isEmpty()){
+            return;
+        }
+        List<BlockPos> basketPosList = movingBlock.getBasketPosList();
+        List<BlockPos> basketOriginPosList = movingBlock.getBasketOriginPosList();
+        List<BlockState> basketStateList = movingBlock.getBasketStateList();
+        if(basketPosList.isEmpty() || basketOriginPosList.isEmpty() || basketStateList.isEmpty()){
+            return;
+        }
+
         Level level = movingBlock.level();
-        BlockState placedState=level.getBlockState(movingBlock.blockPosition());
+        BlockPos movingBlockPosition = movingBlock.blockPosition();
+        BlockState placedState=level.getBlockState(movingBlockPosition);
         i0=15728880;
-        BlockPos lightPos=movingBlock.getPosList().get(0).offset(movingBlock.blockPosition().getX(),movingBlock.blockPosition().getY(),movingBlock.blockPosition().getZ());
+        BlockPos lightPos=posList.get(0).offset(movingBlockPosition.getX(),movingBlockPosition.getY(),movingBlockPosition.getZ());
         int light=LightTexture.pack(this.getBlockLightLevel((T) movingBlock, lightPos), this.getSkyLightLevel((T) movingBlock, lightPos));
         if(placedState.isAir()){
             movingBlock.setPreBlockLightLevel(i0);
@@ -213,10 +227,6 @@ import java.util.List;
         }
         //poseStack.popPose();
 
-
-        List<BlockPos> basketPosList = movingBlock.getBasketPosList();
-        List<BlockPos> basketOriginPosList = movingBlock.getBasketOriginPosList();
-        List<BlockState> basketStateList = movingBlock.getBasketStateList();
         for (int j = 0; j < basketPosList.size(); j++) {
             BlockPos eachBasketPos = basketPosList.get(j);
             BlockPos eachBasketOriginPos = basketOriginPosList.get(j);
