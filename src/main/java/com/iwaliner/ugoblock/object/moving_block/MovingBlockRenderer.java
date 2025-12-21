@@ -115,12 +115,7 @@ import java.util.List;
         if(stateList == null || stateList.isEmpty()){
             return;
         }
-        List<BlockPos> basketPosList = movingBlock.getBasketPosList();
-        List<BlockPos> basketOriginPosList = movingBlock.getBasketOriginPosList();
-        List<BlockState> basketStateList = movingBlock.getBasketStateList();
-        if(basketPosList.isEmpty() || basketOriginPosList.isEmpty() || basketStateList.isEmpty()){
-            return;
-        }
+
 
         Level level = movingBlock.level();
         BlockPos movingBlockPosition = movingBlock.blockPosition();
@@ -226,6 +221,12 @@ import java.util.List;
             }
         }
         //poseStack.popPose();
+        List<BlockPos> basketPosList = movingBlock.getBasketPosList();
+        List<BlockPos> basketOriginPosList = movingBlock.getBasketOriginPosList();
+        List<BlockState> basketStateList = movingBlock.getBasketStateList();
+//        if(basketPosList.isEmpty() || basketOriginPosList.isEmpty() || basketStateList.isEmpty()){
+//            return;
+//        }
 
         for (int j = 0; j < basketPosList.size(); j++) {
             BlockPos eachBasketPos = basketPosList.get(j);
