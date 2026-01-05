@@ -131,7 +131,7 @@ public class ClientNonBusSetUp {
         float b = 0f;
         float a = 0.95f;
 
-        float offsetDistance = 0.001f;
+        float offsetDistance = 0.005f;
 
 
         for (int i = 0; i < 6; i++) {
