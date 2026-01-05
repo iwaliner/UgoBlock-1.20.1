@@ -86,7 +86,7 @@ import java.util.List;
     }
     public void render(T movingBlock, float f1, float f2, PoseStack poseStack, MultiBufferSource bufferSource, int i0) {
         Display.RenderState display$renderstate = movingBlock.renderState();
-        if (display$renderstate != null) {
+        if (display$renderstate != null&& movingBlock instanceof MovingBlockEntity) {
                 float f = movingBlock.calculateInterpolationProgress(f2);
                 this.shadowRadius = display$renderstate.shadowRadius().get(f);
                 this.shadowStrength = display$renderstate.shadowStrength().get(f);
@@ -112,7 +112,10 @@ import java.util.List;
         Level level = movingBlock.level();
         BlockState placedState=level.getBlockState(movingBlock.blockPosition());
         i0=15728880;
-        BlockPos lightPos=movingBlock.getPosList().get(0).offset(movingBlock.blockPosition().getX(),movingBlock.blockPosition().getY(),movingBlock.blockPosition().getZ());
+        BlockPos lightPos=movingBlock.blockPosition();
+        if(movingBlock.getPosList()!=null&&!movingBlock.getPosList().isEmpty()) {
+            lightPos = movingBlock.getPosList().get(0).offset(movingBlock.blockPosition().getX(), movingBlock.blockPosition().getY(), movingBlock.blockPosition().getZ());
+        }
         int light=LightTexture.pack(this.getBlockLightLevel((T) movingBlock, lightPos), this.getSkyLightLevel((T) movingBlock, lightPos));
         if(placedState.isAir()){
             movingBlock.setPreBlockLightLevel(i0);
