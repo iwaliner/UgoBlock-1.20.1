@@ -1,16 +1,8 @@
 package com.iwaliner.ugoblock.object.controller;
 
-import com.iwaliner.ugoblock.ModCoreUgoBlock;
 import com.iwaliner.ugoblock.Utils;
-import com.iwaliner.ugoblock.register.ClientNonBusSetUp;
 import com.iwaliner.ugoblock.register.Register;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
@@ -18,22 +10,16 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.ForgeMod;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 
 public class VectorCardItem extends Item {
     public VectorCardItem(Properties p_41383_) {
@@ -45,10 +31,7 @@ public class VectorCardItem extends Item {
         BlockPos pos=context.getClickedPos();
        ItemStack stack=context.getItemInHand();
         if(stack.getItem() instanceof VectorCardItem) {
-            CompoundTag tag =stack.getTag();
-            if(tag==null){
-                tag=new CompoundTag();
-            }
+            CompoundTag tag = stack.getOrCreateTag();
             /**このタグは、tureのときfalseにした上で移動量選択終了処理を行い、falseのときはtrueにしたうえで移動量選択開始処理を行う*/
             if(!tag.contains("select")){
                 tag.putBoolean("select",false);

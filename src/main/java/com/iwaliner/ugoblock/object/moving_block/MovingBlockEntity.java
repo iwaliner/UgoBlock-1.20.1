@@ -577,6 +577,7 @@ public class MovingBlockEntity extends Display.BlockDisplay {
         }
     }
 
+    // @debug, Roseyasa 20250906: I MUST refine this function someday...
     public void rotateAndMakeBlock(int degree) { /**回転し終わってブロック化する*/
         int degree2 = degree + getVisualRot() + getStartRotation();
         if (!level().isClientSide && degree2 % 90 == 0) {

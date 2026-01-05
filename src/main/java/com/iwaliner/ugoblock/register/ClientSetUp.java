@@ -1,6 +1,7 @@
 package com.iwaliner.ugoblock.register;
 
 import com.iwaliner.ugoblock.ModCoreUgoBlock;
+import com.iwaliner.ugoblock.Utils;
 import com.iwaliner.ugoblock.object.basket_maker.BasketMakerRenderer;
 import com.iwaliner.ugoblock.object.basket_maker.BasketMakerScreen;
 import com.iwaliner.ugoblock.object.controller.RotationControllerRenderer;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +54,7 @@ public class ClientSetUp {
         MenuScreens.register(Register.SlideControllerMenu.get(), SlideControllerScreen::new);
         MenuScreens.register(Register.RotationControllerMenu.get(), RotationControllerScreen::new);
         MenuScreens.register(Register.BasketMakerMenu.get(), BasketMakerScreen::new);
+
             event.enqueueWork(() -> {
                 ItemProperties.register(Register.portable_alternate_wireless_redstone_transmitter.get(), new ResourceLocation(ModCoreUgoBlock.MODID, "color1"), (itemStack, clientWorld, livingEntity, i) -> PortableAlternateWirelessRedstoneTransmitterItem.getColor1(itemStack).getId());
                 ItemProperties.register(Register.portable_alternate_wireless_redstone_transmitter.get(), new ResourceLocation(ModCoreUgoBlock.MODID, "color2"), (itemStack, clientWorld, livingEntity, i) -> PortableAlternateWirelessRedstoneTransmitterItem.getColor2(itemStack).getId());
@@ -69,43 +72,76 @@ public class ClientSetUp {
         event.register(ClientSetUp::getColorPortableWirelessRedstoneTransmitter,Register.portable_alternate_wireless_redstone_transmitter.get());
         event.register(ClientSetUp::getColorPortableWirelessRedstoneTransmitter,Register.portable_momentary_wireless_redstone_transmitter.get());
     }
+
+    private static final int NO_COLOR = 2378057;
     private static int getColorPortableWirelessRedstoneTransmitter(ItemStack stack,int index){
-        if(stack.is(Register.portable_alternate_wireless_redstone_transmitter.get())||stack.is(Register.portable_momentary_wireless_redstone_transmitter.get())){
-            int color1 = PortableAlternateWirelessRedstoneTransmitterItem.isColor1Null(stack)? -1 : PortableAlternateWirelessRedstoneTransmitterItem.getColor1(stack).getId();
-            int color2 = PortableAlternateWirelessRedstoneTransmitterItem.isColor2Null(stack)? -1 : PortableAlternateWirelessRedstoneTransmitterItem.getColor2(stack).getId();
-            int color3 = PortableAlternateWirelessRedstoneTransmitterItem.isColor3Null(stack)? -1 : PortableAlternateWirelessRedstoneTransmitterItem.getColor3(stack).getId();
-            if(index==0){
-               return getColor(color1);
-            }else if(index==1){
-                return getColor(color2);
-            }else if(index==2){
-                return getColor(color3);
-            }
+        /*
+            For Portable Wireless Redstone Transmitter, we could only apply 3 colors one by one.
+            So if 1st color is null, then 2nd and 3rd colors are also null.
+            If 2nd color is null, then 3rd color is also null.
+            As every tick would do this query, we should do the best to optimize this rendering function.
+            This would NOT apply to Receivers or Non-portable Transmitters.
+            Roseyasa, 20250906
+         */
+        if(stack == null || index < 0 || index > 2){
+            return NO_COLOR;
         }
-        return 2378057;
+        if(!stack.is(Register.portable_alternate_wireless_redstone_transmitter.get()) &&
+            !stack.is(Register.portable_momentary_wireless_redstone_transmitter.get())){
+            return NO_COLOR;
+        }
+
+        // case index == 0,1,2:
+        boolean isColor1Null = PortableAlternateWirelessRedstoneTransmitterItem.isColor1Null(stack);
+        // if index 0 is null, then 1 and 2 are also null.
+        if(isColor1Null){
+            return NO_COLOR;
+        }
+        CompoundTag stackTag = stack.getOrCreateTag();
+        if(index == 0){
+            return getColor(PortableAlternateWirelessRedstoneTransmitterItem.getColor1(stackTag).getId());
+        }
+
+        // case index == 1,2:
+        boolean isColor2Null = PortableAlternateWirelessRedstoneTransmitterItem.isColor2Null(stack);
+        // if index 1 is null, then 2 is also null.
+        if(isColor2Null){
+            return NO_COLOR;
+        }
+
+        if(index == 1){
+            return getColor(PortableAlternateWirelessRedstoneTransmitterItem.getColor2(stackTag).getId());
+        }
+
+        // case index == 2:
+        if (PortableAlternateWirelessRedstoneTransmitterItem.isColor3Null(stack)) {
+            return NO_COLOR;
+        }
+        return getColor(PortableAlternateWirelessRedstoneTransmitterItem.getColor3(stackTag).getId());
+
     }
     private static int getColor( int i){
         if(i==-1){
-            return 2378057;
+            return NO_COLOR;
         }
-        switch (DyeColor.byId(i)){
-            case WHITE : return 16448250;
-            case BLACK:  return 0;
-            case BLUE : return 3883174;
-            case BROWN : return 8278063;
-            case CYAN : return 1480344;
-            case GRAY : return 4541519;
-            case GREEN : return 6060054;
-            case LIGHT_BLUE : return 4834020;
-            case LIGHT_GRAY : return 10066323;
-            case LIME : return 8176411;
-            case MAGENTA : return 13259457;
-            case ORANGE : return 16351261;
-            case PINK: return 16033728;
-            case PURPLE : return 8794293;
-            case RED : return 11283492;
-            case YELLOW : return 16634933;
-        }
-        return 2378057;
+        return switch (DyeColor.byId(i)) {
+            case WHITE -> 16448250;
+            case BLACK -> 0;
+            case BLUE -> 3883174;
+            case BROWN -> 8278063;
+            case CYAN -> 1480344;
+            case GRAY -> 4541519;
+            case GREEN -> 6060054;
+            case LIGHT_BLUE -> 4834020;
+            case LIGHT_GRAY -> 10066323;
+            case LIME -> 8176411;
+            case MAGENTA -> 13259457;
+            case ORANGE -> 16351261;
+            case PINK -> 16033728;
+            case PURPLE -> 8794293;
+            case RED -> 11283492;
+            case YELLOW -> 16634933;
+            default -> NO_COLOR;
+        };
     }
 }

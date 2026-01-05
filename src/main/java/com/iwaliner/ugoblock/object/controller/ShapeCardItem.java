@@ -1,6 +1,5 @@
 package com.iwaliner.ugoblock.object.controller;
 
-import com.iwaliner.ugoblock.ModCoreUgoBlock;
 import com.iwaliner.ugoblock.Utils;
 import com.iwaliner.ugoblock.register.Register;
 import net.minecraft.ChatFormatting;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,10 +37,7 @@ public class ShapeCardItem extends Item {
         int size = stack.getCount();
         boolean flag = false;
         if (stack.getItem() instanceof ShapeCardItem && player != null) {
-            CompoundTag tag = stack.getTag();
-            if (tag == null) {
-                tag = new CompoundTag();
-            }
+            CompoundTag tag = stack.getOrCreateTag();
             if (!tag.contains("positionList")) {
                 tag.put("positionList", new CompoundTag());
             }

@@ -1,8 +1,6 @@
 package com.iwaliner.ugoblock.object.block_imitation_wand;
 
-import com.iwaliner.ugoblock.object.gravitate_block.GravitateBlockEntity;
-import com.iwaliner.ugoblock.object.moving_block.MovingBlockEntity;
-import com.iwaliner.ugoblock.object.seat.SeatEntity;
+import com.iwaliner.ugoblock.Utils;
 import com.iwaliner.ugoblock.register.Register;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -13,7 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -23,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -65,10 +61,7 @@ public class BlockImitationWandItem extends Item {
        return state.is(Register.slide_controller_block.get())||state.is(Register.rotation_controller_block.get())||state.is(Register.wireless_redstone_transmitter_block.get())||state.is(Register.wireless_redstone_receiver_block.get())/*||state.is(Register.basket_maker_block.get())*/;
     }
     private boolean isNotSavedState(Level level,ItemStack stack){
-        CompoundTag tag =stack.getTag();
-        if(tag==null){
-            tag=new CompoundTag();
-        }
+        CompoundTag tag = stack.getOrCreateTag();
         if(tag.contains("imitatingState")) {
             return NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), tag.getCompound("imitatingState")).isAir();
         }else{
@@ -76,18 +69,12 @@ public class BlockImitationWandItem extends Item {
         }
     }
     private void setState(BlockState state, ItemStack stack){
-        CompoundTag tag =stack.getTag();
-        if(tag==null){
-            tag=new CompoundTag();
-        }
-            tag.put("imitatingState", NbtUtils.writeBlockState(state));
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.put("imitatingState", NbtUtils.writeBlockState(state));
         stack.setTag(tag);
     }
     public BlockState getState(Level level, ItemStack stack){
-        CompoundTag tag =stack.getTag();
-        if(tag==null){
-            tag=new CompoundTag();
-        }
+        CompoundTag tag = stack.getOrCreateTag();
         if(tag.contains("imitatingState")) {
             return NbtUtils.readBlockState(level.holderLookup(Registries.BLOCK), tag.getCompound("imitatingState"));
         }

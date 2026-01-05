@@ -44,7 +44,7 @@ import java.util.*;
 @Mod.EventBusSubscriber(modid = ModCoreUgoBlock.MODID, value = Dist.CLIENT)
 public class ClientNonBusSetUp {
 
-    // @debug, only render one box for performance
+    // only render one box for performance
     private static final double[] box = {
         // front
         0.05, 0.05, 0.0, 0.95, 0.95, 0.0,
